@@ -24,6 +24,9 @@
       ],
       "ionic-database-builder/*": [
         "dist/ionic-database-builder/src/lib/*"
+      ],
+      "moment": [
+        "node_modules/moment/src/moment.js"
       ]
     }
   }

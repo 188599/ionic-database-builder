@@ -3,13 +3,14 @@ import { Type, NgModule, SkipSelf, Optional, ModuleWithProviders } from '@angula
 import { DatabaseMigrationContract } from './services/database-migration-contract';
 import { DatabaseSettingsFactoryContract } from './utils/database-settings-factory-contract';
 import {
-  IS_AVAILABLE_DATABASE, DATABASE_CREATOR, IS_ENABLE_LOG, DATABASE_MIGRATION, PLATFORM_LOAD
+  IS_AVAILABLE_DATABASE, DATABASE_CREATOR, IS_ENABLE_LOG, DATABASE_MIGRATION, PLATFORM_LOAD,
+  DATABASE_FACTORY_CONTRACT,
+  DATABASE_SETTINGS_FACTORY
 } from './utils/dependency-injection-definition';
 import { Database } from './services/database';
 import { DatabaseMigration } from './services/database-migration';
 import { DatabaseHelperService } from './services/database-helper.service';
 import { DatabaseFactoryDefault } from './defaults/database-factory-default';
-import { DatabaseFactoryContract } from './utils/database-factory-contract';
 import { PlatformLoad } from './utils/platform-load';
 import { PlatformLoadDefault } from './utils/platform-load-default';
 
@@ -19,7 +20,7 @@ import { PlatformLoadDefault } from './utils/platform-load-default';
     Database,
     DatabaseHelperService,
     {
-      provide: DatabaseFactoryContract,
+      provide: DATABASE_FACTORY_CONTRACT,
       useClass: DatabaseFactoryDefault
     },
     {
@@ -52,7 +53,7 @@ public static forSimple(isEnableLogProvider: boolean = false, isAvailableProvide
     return {
         ngModule: IonicDatabaseBuilderModule,
         providers: [
-            { provide: DatabaseSettingsFactoryContract, useClass: settingsProvider },
+            { provide: DATABASE_SETTINGS_FACTORY, useClass: settingsProvider },
             { provide: DATABASE_CREATOR, useClass: databaseCreatorProvider },
             { provide: DATABASE_MIGRATION, useClass: databaseMigrationContract },
             { provide: IS_ENABLE_LOG, useValue: isEnableLogProvider },

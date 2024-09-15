@@ -1,26 +1,18 @@
-import { DatabaseResult, DatabaseBuilderError } from 'database-builder';
-import { DatabaseManager } from './database-manager';
-import { Crud, DatabaseObject, Ddl, ExecutableBuilder, GetMapper, Query, QueryCompiled } from 'database-builder';
-import { DatabaseFactoryContract } from './database-factory-contract';
-import { Observable, Observer, from, of } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
-import { PlatformLoad } from './platform-load';
-import { DatabaseSettingsFactoryContract } from './database-settings-factory-contract';
-import { Injector } from '@angular/core';
+import { inject, INJECTOR } from '@angular/core';
+import { Crud, DatabaseBuilderError, DatabaseObject, DatabaseResult, Ddl, ExecutableBuilder, GetMapper, Query, QueryCompiled } from 'database-builder';
 import { ManagedTransaction } from 'database-builder/src/transaction/managed-transaction';
+import { from, Observable, Observer, of } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
+import { DatabaseManager } from './database-manager';
+import { DATABASE_SETTINGS_FACTORY, IS_ENABLE_LOG } from './dependency-injection-definition';
 
 export abstract class BuildableDatabaseManager extends DatabaseManager {
 
-    constructor(
-        databaseFactory: DatabaseFactoryContract,
-        protected _databaseSettings: DatabaseSettingsFactoryContract,
-        protected _injector: Injector,
-        private _mapper: GetMapper,
-        platformLoad: PlatformLoad,
-        public enableLog: boolean = true
-    ) {
-        super(databaseFactory, platformLoad);
-    }
+    protected _databaseSettings = inject(DATABASE_SETTINGS_FACTORY);
+    protected _injector = inject(INJECTOR);
+    public enableLog = inject(IS_ENABLE_LOG) ?? true;
+    private _mapper = this._databaseSettings.mapper(this._injector);
+
 
     public get mapper(): GetMapper {
         return this._mapper;

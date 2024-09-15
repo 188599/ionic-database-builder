@@ -1,26 +1,18 @@
 import { Version } from './../model/version-model';
-import { Injectable, Injector, Optional, Inject } from '@angular/core';
+import { INJECTOR, Injectable, inject } from '@angular/core';
 import { Ddl, DatabaseObject, forkJoinSafe } from 'database-builder';
-import { DatabaseMigrationContract } from './database-migration-contract';
 import { DatabaseMigrationBase } from '../utils/database-migration-base';
 import { DatabaseResettableContract } from './database-resettable-contract';
-import { DatabaseSettingsFactoryContract } from '../utils/database-settings-factory-contract';
 import { Observable, Observer } from 'rxjs';
-import { DATABASE_MIGRATION } from '../utils/dependency-injection-definition';
+import { DATABASE_MIGRATION, DATABASE_SETTINGS_FACTORY } from '../utils/dependency-injection-definition';
 
 @Injectable()
 export class DatabaseMigration extends DatabaseMigrationBase implements DatabaseResettableContract {
 
-    private _settings: DatabaseSettingsFactoryContract;
+    private _settings = inject(DATABASE_SETTINGS_FACTORY);
+    private _databaseMigrationContract = inject(DATABASE_MIGRATION);
+    private _injector = inject(INJECTOR);
 
-    constructor(
-        private _injector: Injector,
-        @Optional() @Inject(DATABASE_MIGRATION) private _databaseMigrationContract: DatabaseMigrationContract
-    ) {
-        super();
-        // tslint:disable-next-line: deprecation
-        this._settings = _injector.get(DatabaseSettingsFactoryContract);
-    }
 
     public reset(database: DatabaseObject): Observable<any> {
 

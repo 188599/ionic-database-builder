@@ -1,34 +1,16 @@
-import { DatabaseMigration } from './database-migration';
-import { Inject, Injectable, Injector } from '@angular/core';
-import { BuildableDatabaseManager } from '../utils/buildable-database-manager';
-import { DatabaseFactoryContract } from '../utils/database-factory-contract';
+import { inject, Injectable } from '@angular/core';
 import { DatabaseObject } from 'database-builder';
 import { Observable, Observer } from 'rxjs';
-import { IS_AVAILABLE_DATABASE, IS_ENABLE_LOG, PLATFORM_LOAD } from '../utils/dependency-injection-definition';
-import { DatabaseSettingsFactoryContract } from '../utils/database-settings-factory-contract';
-import { PlatformLoad } from '../utils/platform-load';
+import { BuildableDatabaseManager } from '../utils/buildable-database-manager';
+import { IS_AVAILABLE_DATABASE } from '../utils/dependency-injection-definition';
+import { DatabaseMigration } from './database-migration';
 
 @Injectable()
 export class Database extends BuildableDatabaseManager {
 
-    constructor(
-        @Inject(IS_AVAILABLE_DATABASE) private _isAvailable: boolean,
-        @Inject(IS_ENABLE_LOG) isEnableLog: boolean,
-        databaseSettings: DatabaseSettingsFactoryContract,
-        injector: Injector,
-        databaseFactory: DatabaseFactoryContract,
-        private _databaseMigration: DatabaseMigration,
-        @Inject(PLATFORM_LOAD) platformLoad: PlatformLoad
-    ) {
-        super(
-            databaseFactory,
-            databaseSettings,
-            injector,
-            databaseSettings.mapper(injector),
-            platformLoad,
-            isEnableLog
-        );
-    }
+    private _isAvailable = inject(IS_AVAILABLE_DATABASE);
+    private _databaseMigration = inject(DatabaseMigration);
+
 
     protected migrationVersion(database: DatabaseObject, version: number): Observable<boolean> {
         if (this._isAvailable) {

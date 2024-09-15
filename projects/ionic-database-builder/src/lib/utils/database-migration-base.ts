@@ -1,5 +1,4 @@
-import * as momentNs from 'moment';
-const moment = momentNs;
+import moment from 'moment';
 import { DatabaseObject } from 'database-builder';
 import { Observable, Observer } from 'rxjs';
 

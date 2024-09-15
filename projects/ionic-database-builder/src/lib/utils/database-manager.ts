@@ -1,18 +1,15 @@
-import { DatabaseFactoryContract } from './database-factory-contract';
-import { DatabaseObject, DatabaseBuilderError } from 'database-builder';
+import { inject } from '@angular/core';
+import { DatabaseBuilderError, DatabaseObject } from 'database-builder';
 import { Observable } from 'rxjs';
+import { DATABASE_FACTORY_CONTRACT, PLATFORM_LOAD } from './dependency-injection-definition';
+import { DatabaseFactoryContract } from './database-factory-contract';
 import { PlatformLoad } from './platform-load';
 
 export abstract class DatabaseManager {
 
     private _databases: Map<string, Promise<DatabaseObject>> = new Map<string, Promise<DatabaseObject>>();
-
-    constructor(
-        protected databaseFactory: DatabaseFactoryContract,
-        protected _platformLoad: PlatformLoad
-    ) {
-
-    }
+    protected databaseFactory: DatabaseFactoryContract = inject(DATABASE_FACTORY_CONTRACT);
+    protected _platformLoad: PlatformLoad = inject(PLATFORM_LOAD);
 
     public cleanDatabaseName(name: string) {
         return name.replace(/([^a-z0-9]+)/gi, '-');

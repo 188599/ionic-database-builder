@@ -1,18 +1,15 @@
-import { Inject, Injectable } from '@angular/core';
-import { DatabaseFactoryContract } from '../utils/database-factory-contract';
-import { DatabaseObject, DatabaseCreatorContract } from 'database-builder';
+import { inject, Injectable } from '@angular/core';
+import { DatabaseObject } from 'database-builder';
 import { Observable, Observer } from 'rxjs';
+import { DatabaseFactoryContract } from '../utils/database-factory-contract';
 import { DATABASE_CREATOR, IS_AVAILABLE_DATABASE } from '../utils/dependency-injection-definition';
 
 @Injectable()
 export class DatabaseFactoryDefault extends DatabaseFactoryContract {
 
-    constructor(
-        @Inject(IS_AVAILABLE_DATABASE) private _isAvailable: boolean,
-        @Inject(DATABASE_CREATOR) private _databaseCreator: DatabaseCreatorContract
-    ) {
-        super();
-    }
+    private _isAvailable = inject(IS_AVAILABLE_DATABASE);
+    private _databaseCreator = inject(DATABASE_CREATOR);
+
 
     public database(databaseName: string): Observable<DatabaseObject> {
         return new Observable((observer: Observer<DatabaseObject>) => {
